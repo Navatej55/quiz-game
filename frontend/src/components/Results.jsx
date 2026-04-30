@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from '../config';
 import Background from "./Background";
 
 const medal = ["🥇", "🥈", "🥉"];
@@ -19,7 +20,7 @@ const Results = () => {
 
   useEffect(() => {
     const fetchResults = () => {
-      fetch(`https://quiz-game-z2sm.onrender.com/api/results/${roomCode}`)
+      fetch(`${API_BASE_URL}/api/results/${roomCode}`)
         .then((res) => res.json())
         .then((data) => {
           const sorted = data.sort((a, b) => b.score - a.score);

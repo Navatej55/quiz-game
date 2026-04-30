@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Background from './Background';
+import { API_BASE_URL } from '../config';
 
-const API_URL = 'https://quiz-game-z2sm.onrender.com/api/auth/register';
+const API_URL = `${API_BASE_URL}/api/auth/register`;
 
 function Register() {
   const [formData, setFormData] = useState({

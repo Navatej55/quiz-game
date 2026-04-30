@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Background from './Background';
+import { API_BASE_URL } from '../config';
 
 const Room = () => {
   const { roomCode } = useParams();
@@ -26,7 +27,7 @@ const Room = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://quiz-game-z2sm.onrender.com/api/rooms/${roomCode}`, {
+      const response = await fetch(`${API_BASE_URL}/api/rooms/${roomCode}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const data = await response.json();
@@ -47,7 +48,7 @@ const Room = () => {
   const handleStartQuiz = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://quiz-game-z2sm.onrender.com/api/quiz/start`, {
+      const response = await fetch(`${API_BASE_URL}/api/quiz/start`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

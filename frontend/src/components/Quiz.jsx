@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { API_BASE_URL } from "../config";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Background from "./Background";
 
@@ -19,7 +21,7 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await fetch("https://quiz-game-z2sm.onrender.com/api/quiz/questions");
+        const res = await fetch(`${API_BASE_URL}/api/quiz/questions`);
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
           setQuestions(data);
@@ -77,7 +79,7 @@ const Quiz = () => {
     });
 
     try {
-      await fetch("https://quiz-game-z2sm.onrender.com/api/results/save", {
+      await fetch(`${API_BASE_URL}/api/results/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomCode, username, userId: username, score }),
