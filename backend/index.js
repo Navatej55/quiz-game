@@ -15,56 +15,16 @@ const app = express();
 app.use(cors()); // Allow all origins for production testing
 app.use(express.json());
 
-// =========================================================
-// MongoDB Connection Setup (Debug Mode)
-// =========================================================
-
-// 3. Forcefully clear any previous/cached connections to avoid stale states
-mongoose.disconnect();
-
-const uri = process.env.MONGO_URI;
-
-// Sanitize the URI for logging (hides the password)
-const sanitizedUri = uri ? uri.replace(/:([^:@]+)@/, ':****@') : 'UNDEFINED';
-
-// 1. & 2. Complete minimal connection setup using ONE connection
-mongoose.connect(uri)
-  .then(async (conn) => {
-    console.log(`\n==============================================`);
+// MongoDB Connection Setup
+mongoose.connect(process.env.MONGO_URI)
+  .then((conn) => {
     console.log(`✅ MongoDB Connected Successfully`);
-    console.log(`🔗 Sanitized URI: ${sanitizedUri}`);
     console.log(`📡 Host: ${conn.connection.host}`);
     console.log(`📂 Database: ${conn.connection.name}`);
-    console.log(`==============================================\n`);
-
-    // 5. Test Insert (insertOne equivalent using Mongoose)
-    try {
-      // Define a simple schema for the test
-      const testSchema = new mongoose.Schema({
-        message: String,
-        clusterHost: String,
-        timestamp: { type: Date, default: Date.now }
-      });
-      
-      // Ensure we don't overwrite/recompile the model if nodemon reloads
-      const TestModel = mongoose.models.TestConnection || mongoose.model('TestConnection', testSchema);
-      
-      const testDoc = await TestModel.create({
-        message: "Confirming database connection!",
-        clusterHost: conn.connection.host
-      });
-      
-      console.log(`📝 TEST INSERT SUCCESSFUL:`);
-      console.log(`   Document ID: ${testDoc._id}`);
-      console.log(`👉 Action Required: Open MongoDB Atlas, go to the '${conn.connection.name}' database, and look for the 'testconnections' collection to verify this insert.`);
-      console.log(`\n==============================================\n`);
-    } catch (testErr) {
-      console.error('❌ Failed to insert test document:', testErr);
-    }
   })
   .catch((err) => {
     console.error('❌ MongoDB Connection Error:', err);
-    process.exit(1); // Exit if connection fails
+    process.exit(1);
   });
 
 // Routes
